@@ -1,0 +1,72 @@
+# Dependencies
+node_modules/
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+
+# Build outputs
+build/
+dist/
+out/
+
+# Logs
+*.log
+logs/
+
+# Environment files
+.env*
+
+# Cache directories
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+
+# Coverage reports
+coverage/
+.nyc_output/
+
+# Editor files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Documentation
+*.md
+CHANGELOG*
+LICENSE*
+
+# Config files that shouldn't be formatted
+*.json
+*.yml
+*.yaml
+*.toml
+*.xml
+
+# Binary files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.pdf
+*.zip
+*.tar.gz
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
