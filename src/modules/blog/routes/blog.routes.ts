@@ -8,58 +8,279 @@ import { blogImageUpload } from '../utils/blog.upload';
 const router: Router = express.Router();
 
 /**
- * @route GET /api/v1/blogs
- * @desc Get all published blogs (paginated)
- * @access Public
+ * @swagger
+ * tags:
+ *   name: Blogs
+ *   description: Blog management endpoints
+ */
+
+/**
+ * @swagger
+ * /blogs:
+ *   get:
+ *     summary: Get all published blogs
+ *     description: Get all published blogs with pagination
+ *     tags: [Blogs]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of items per page
+ *     responses:
+ *       200:
+ *         description: List of published blogs
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     blogs:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                     pagination:
+ *                       type: object
  */
 router.get('/', blogController.getPublishedBlogs);
 
 /**
- * @route GET /api/v1/blogs/admin
- * @desc Get all blogs including unpublished (paginated)
- * @access Private/Admin
+ * @swagger
+ * /blogs/admin:
+ *   get:
+ *     summary: Get all blogs (Admin)
+ *     description: Get all blogs including unpublished ones (Admin only)
+ *     tags: [Blogs]
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *     responses:
+ *       200:
+ *         description: List of all blogs
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Admin access required
  */
 router.get('/admin', protect, authorize('admin'), blogController.getAllBlogs);
 
 /**
- * @route GET /api/v1/blogs/search
- * @desc Search blogs by title, content, excerpt, category, or tags
- * @access Public
+ * @swagger
+ * /blogs/search:
+ *   get:
+ *     summary: Search blogs
+ *     description: Search blogs by title, content, excerpt, category, or tags
+ *     tags: [Blogs]
+ *     parameters:
+ *       - in: query
+ *         name: q
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Search query
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *     responses:
+ *       200:
+ *         description: Search results
  */
 router.get('/search', blogController.searchBlogs);
 
 /**
- * @route GET /api/v1/blogs/category/:category
- * @desc Get blogs by category (paginated)
- * @access Public
+ * @swagger
+ * /blogs/category/{category}:
+ *   get:
+ *     summary: Get blogs by category
+ *     description: Get all blogs in a specific category
+ *     tags: [Blogs]
+ *     parameters:
+ *       - in: path
+ *         name: category
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Blog category
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *     responses:
+ *       200:
+ *         description: List of blogs in category
  */
 router.get('/category/:category', blogController.getBlogsByCategory);
 
 /**
- * @route GET /api/v1/blogs/tag/:tag
- * @desc Get blogs by tag (paginated)
- * @access Public
+ * @swagger
+ * /blogs/tag/{tag}:
+ *   get:
+ *     summary: Get blogs by tag
+ *     description: Get all blogs with a specific tag
+ *     tags: [Blogs]
+ *     parameters:
+ *       - in: path
+ *         name: tag
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Blog tag
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *     responses:
+ *       200:
+ *         description: List of blogs with tag
  */
 router.get('/tag/:tag', blogController.getBlogsByTag);
 
 /**
- * @route GET /api/v1/blogs/:slug
- * @desc Get blog by slug
- * @access Public (published only) / Private (all)
+ * @swagger
+ * /blogs/{slug}:
+ *   get:
+ *     summary: Get blog by slug
+ *     description: Get a blog post by its URL slug
+ *     tags: [Blogs]
+ *     parameters:
+ *       - in: path
+ *         name: slug
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Blog slug
+ *     responses:
+ *       200:
+ *         description: Blog details
+ *       404:
+ *         description: Blog not found
  */
 router.get('/:slug', blogController.getBlogBySlug);
 
 /**
- * @route GET /api/v1/blogs/id/:id
- * @desc Get blog by ID
- * @access Private/Admin
+ * @swagger
+ * /blogs/id/{id}:
+ *   get:
+ *     summary: Get blog by ID
+ *     description: Get a blog post by its ID (Admin only)
+ *     tags: [Blogs]
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Blog ID
+ *     responses:
+ *       200:
+ *         description: Blog details
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Blog not found
  */
 router.get('/id/:id', protect, authorize('admin'), blogController.getBlogById);
 
 /**
- * @route POST /api/v1/blogs
- * @desc Create a new blog with optional image upload
- * @access Private/Admin
+ * @swagger
+ * /blogs:
+ *   post:
+ *     summary: Create a new blog
+ *     description: Create a new blog post with optional image upload (Admin only)
+ *     tags: [Blogs]
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - content
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: Blog title
+ *               content:
+ *                 type: string
+ *                 description: Blog content (HTML or Markdown)
+ *               excerpt:
+ *                 type: string
+ *                 description: Short excerpt
+ *               category:
+ *                 type: string
+ *                 description: Blog category
+ *               tags:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Blog tags
+ *               isPublished:
+ *                 type: boolean
+ *                 default: false
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *                 description: Blog cover image
+ *     responses:
+ *       201:
+ *         description: Blog created successfully
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
  */
 router.post(
   '/',
@@ -71,9 +292,54 @@ router.post(
 );
 
 /**
- * @route PUT /api/v1/blogs/:id
- * @desc Update a blog by ID with optional image upload
- * @access Private/Admin
+ * @swagger
+ * /blogs/{id}:
+ *   put:
+ *     summary: Update a blog
+ *     description: Update an existing blog post (Admin only)
+ *     tags: [Blogs]
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Blog ID
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               content:
+ *                 type: string
+ *               excerpt:
+ *                 type: string
+ *               category:
+ *                 type: string
+ *               tags:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               isPublished:
+ *                 type: boolean
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Blog updated successfully
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Blog not found
  */
 router.put(
   '/:id',
@@ -85,9 +351,31 @@ router.put(
 );
 
 /**
- * @route PATCH /api/v1/blogs/:id/toggle-publish
- * @desc Toggle blog publish status
- * @access Private/Admin
+ * @swagger
+ * /blogs/{id}/toggle-publish:
+ *   patch:
+ *     summary: Toggle blog publish status
+ *     description: Toggle the publish status of a blog post (Admin only)
+ *     tags: [Blogs]
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Blog ID
+ *     responses:
+ *       200:
+ *         description: Publish status toggled
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Blog not found
  */
 router.patch(
   '/:id/toggle-publish',
@@ -97,9 +385,31 @@ router.patch(
 );
 
 /**
- * @route DELETE /api/v1/blogs/:id
- * @desc Delete a blog by ID
- * @access Private/Admin
+ * @swagger
+ * /blogs/{id}:
+ *   delete:
+ *     summary: Delete a blog
+ *     description: Delete a blog post by ID (Admin only)
+ *     tags: [Blogs]
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Blog ID
+ *     responses:
+ *       200:
+ *         description: Blog deleted successfully
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Blog not found
  */
 router.delete('/:id', protect, authorize('admin'), blogController.deleteBlog);
 

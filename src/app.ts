@@ -14,6 +14,9 @@ import { errorHandler, notFoundHandler } from './common/utils/errorHandler';
 
 // Import Passport configuration
 
+// Import Swagger configuration
+import { setupSwagger } from './config/swagger-jsdoc';
+
 // Import routes
 import initializeRoutes from './common/utils/initializeRoutes';
 import authRoutes from './modules/user/routes/auth.routes';
@@ -82,6 +85,9 @@ const allMiddlewares = [
 
 // Use middlewares
 app.use(allMiddlewares);
+
+// Setup Swagger documentation
+setupSwagger(app);
 
 // Serve static files from uploads directory with CORS headers
 const uploadPath = process.env.UPLOAD_PATH || './uploads';
