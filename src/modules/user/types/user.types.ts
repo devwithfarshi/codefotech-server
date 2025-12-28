@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
-import userValidation from '../validations/user.validation';
 import * as z from 'zod';
-import { IAttachment } from '@/types/common.types';
+import userValidation from '../validations/user.validation';
 
 // User Role Enum
 export enum UserRole {
@@ -19,7 +18,6 @@ export interface IUser extends mongoose.Document {
   email: string;
   password?: string;
   role: UserRole | null;
-  avatar?: IAttachment;
   isActive: boolean;
   passwordResetToken?: string;
   passwordResetExpiry?: Date;

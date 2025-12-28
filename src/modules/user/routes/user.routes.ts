@@ -1,8 +1,6 @@
 import express, { Router } from 'express';
 import { protect, authorize } from '@/common/middleware/auth.middleware';
 import userController from '../controllers/user.controller';
-import avatarController from '../controllers/avatar.controller';
-import { avatarUpload } from '@/common/utils/fileUpload';
 import userValidation from '../validations/user.validation';
 import validate from '@/common/middleware/validator.middlewares';
 
@@ -42,19 +40,5 @@ router.delete('/deactivate', protect, userController.deactivateAccount);
  * @access Private/Admin
  */
 router.get('/', protect, authorize('admin'), userController.getAllUsers);
-
-/**
- * @route POST /api/v1/users/avatar
- * @desc Upload user avatar
- * @access Private
- */
-router.post('/avatar', protect, avatarUpload.single('avatar'), avatarController.uploadAvatar);
-
-/**
- * @route DELETE /api/v1/users/avatar
- * @desc Delete user avatar
- * @access Private
- */
-router.delete('/avatar', protect, avatarController.deleteAvatar);
 
 export default router;

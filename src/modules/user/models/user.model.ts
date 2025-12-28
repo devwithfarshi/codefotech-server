@@ -20,14 +20,6 @@ const UserSchema = new mongoose.Schema<IUser>(
       enum: UserRoleList,
       default: null,
     },
-    avatar: {
-      public_id: {
-        type: String,
-      },
-      url: {
-        type: String,
-      },
-    },
     isActive: {
       type: Boolean,
       default: true,
