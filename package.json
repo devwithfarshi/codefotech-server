@@ -14,7 +14,8 @@
     "prettier": "prettier --check \"src/**/*.ts\"",
     "prettier:fix": "prettier --write \"src/**/*.ts\"",
     "format": "npm run prettier:fix && npm run lint:fix",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "seed:user": "ts-node -r tsconfig-paths/register scripts/createDefaultUser.ts"
   },
   "keywords": [],
   "author": "",
@@ -42,7 +43,6 @@
     "morgan": "^1.10.1",
     "multer": "^2.0.2",
     "nodemailer": "^7.0.12",
-    "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "zod": "^4.2.1"
   },

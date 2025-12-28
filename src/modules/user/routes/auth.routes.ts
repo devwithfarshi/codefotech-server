@@ -2,8 +2,7 @@ import validate from '@/common/middleware/validator.middlewares';
 import express, { Router } from 'express';
 import authController from '../controllers/auth.controller';
 import userValidation from '../validations/user.validation';
-import { protect } from '@/common/middleware/auth.middleware';
-import { authorize } from 'passport';
+import { authorize, protect } from '@/common/middleware/auth.middleware';
 import { UserRole } from '../types/user.types';
 
 const router: Router = express.Router();

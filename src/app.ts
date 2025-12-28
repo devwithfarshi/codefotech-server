@@ -16,6 +16,9 @@ import { errorHandler, notFoundHandler } from './common/utils/errorHandler';
 
 // Import routes
 import initializeRoutes from './common/utils/initializeRoutes';
+import authRoutes from './modules/user/routes/auth.routes';
+import userRoutes from './modules/user/routes/user.routes';
+import blogRoutes from './modules/blog/routes/blog.routes';
 const app: express.Application = express();
 
 // CORS configuration
@@ -111,7 +114,9 @@ app.get(['/', '/api/v1', '/health'], (req, res) => {
 
 // Use routes
 initializeRoutes(app, '/api/v1', [
-  // website
+  { path: '/auth', router: authRoutes },
+  { path: '/users', router: userRoutes },
+  { path: '/blogs', router: blogRoutes },
 ]);
 
 // Error handling middlewares

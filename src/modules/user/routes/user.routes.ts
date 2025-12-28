@@ -1,8 +1,6 @@
+import { authorize, protect } from '@/common/middleware/auth.middleware';
 import express, { Router } from 'express';
-import { protect, authorize } from '@/common/middleware/auth.middleware';
 import userController from '../controllers/user.controller';
-import userValidation from '../validations/user.validation';
-import validate from '@/common/middleware/validator.middlewares';
 
 const router: Router = express.Router();
 
