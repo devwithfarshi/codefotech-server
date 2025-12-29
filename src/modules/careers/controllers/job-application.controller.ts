@@ -68,7 +68,7 @@ const createJobApplication: RequestHandler = asyncHandler(async (req: Request, r
 <p><i><b>N.B: This is an automated mail. Need not any reply.</b></i></p>`
   );
   await sendEmail(
-    'info@codefotech.com',
+    'careers@codefotech.com',
     `New Job Application Received - ${vacancyExists.title}`,
     null,
     null,
