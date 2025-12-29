@@ -7,7 +7,6 @@ import { NextFunction, Request, Response } from 'express';
 import status from 'http-status';
 import userService from '../services/user.service';
 import { setCookies } from '../utils/cookieUtils';
-import { CreateUserType } from '../types/user.types';
 import { generateRandomPassword, generateRandomToken } from '../utils';
 
 const authController = {

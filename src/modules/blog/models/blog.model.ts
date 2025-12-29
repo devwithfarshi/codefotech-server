@@ -54,10 +54,6 @@ const BlogSchema = new mongoose.Schema<IBlog>(
       type: Date,
       default: null,
     },
-    readTime: {
-      type: String,
-      required: true,
-    },
     image: {
       type: AttachmentSchema,
       default: null,

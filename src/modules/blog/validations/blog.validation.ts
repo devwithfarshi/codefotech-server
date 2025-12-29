@@ -33,10 +33,6 @@ export const blogValidation = {
         )
         .min(1, 'At least one tag is required')
         .max(10, 'Maximum 10 tags allowed'),
-      readTime: z
-        .string()
-        .min(1, 'Read time is required')
-        .max(20, 'Read time must be at most 20 characters'),
       isPublished: z.boolean().optional().default(false),
     }),
   },
@@ -74,11 +70,6 @@ export const blogValidation = {
         )
         .min(1, 'At least one tag is required')
         .max(10, 'Maximum 10 tags allowed')
-        .optional(),
-      readTime: z
-        .string()
-        .min(1, 'Read time is required')
-        .max(20, 'Read time must be at most 20 characters')
         .optional(),
       isPublished: z.boolean().optional(),
     }),

@@ -13,7 +13,6 @@ export interface IBlog extends mongoose.Document {
   category: string;
   tags: string[];
   publishedAt: Date;
-  readTime: string;
   image: IAttachment;
   isPublished: boolean;
 }

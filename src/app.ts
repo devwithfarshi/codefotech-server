@@ -22,6 +22,7 @@ import initializeRoutes from './common/utils/initializeRoutes';
 import authRoutes from './modules/user/routes/auth.routes';
 import userRoutes from './modules/user/routes/user.routes';
 import blogRoutes from './modules/blog/routes/blog.routes';
+import careerRoutes from './modules/careers/routes/index';
 const app: express.Application = express();
 
 // CORS configuration
@@ -123,6 +124,7 @@ initializeRoutes(app, '/api/v1', [
   { path: '/auth', router: authRoutes },
   { path: '/users', router: userRoutes },
   { path: '/blogs', router: blogRoutes },
+  { path: '/careers', router: careerRoutes },
 ]);
 
 // Error handling middlewares
