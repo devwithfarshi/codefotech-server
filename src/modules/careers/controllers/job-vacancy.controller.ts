@@ -43,11 +43,20 @@ const getJobVacancyById: RequestHandler = asyncHandler(async (req: Request, res:
  * Get all job vacancies with pagination and filtering
  */
 const getAllJobVacancies: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
-  const { page = 1, limit = 10, department, status: vacancyStatus, sortBy, sortOrder } = req.query;
+  const {
+    page = 1,
+    limit = 10,
+    department,
+    status: vacancyStatus,
+    sortBy,
+    sortOrder,
+    q,
+  } = req.query;
 
   const filters = {
     department: department as string,
     status: vacancyStatus as JobVacancyStatus,
+    q: q as string,
   };
   const isAdmin = req.user?.role === UserRole.ADMIN;
   const options = {

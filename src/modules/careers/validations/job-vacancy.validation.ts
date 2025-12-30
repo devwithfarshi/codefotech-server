@@ -199,6 +199,7 @@ export const jobVacancyValidation: any = {
       status: z.nativeEnum(JobVacancyStatus).optional(),
       sortBy: z.enum(['createdAt', 'title', 'department', 'openPositions']).optional(),
       sortOrder: z.enum(['asc', 'desc']).optional(),
+      q: z.string().optional(),
     }),
   },
 

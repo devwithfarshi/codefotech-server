@@ -1,4 +1,4 @@
-import {  PaginateOptions, Types } from 'mongoose';
+import { PaginateOptions, Types } from 'mongoose';
 import JobVacancy from '../models/job-vacancy.model';
 import { IJobVacancy, JobVacancyStatus } from '../types/job-vacancy.types';
 
@@ -22,6 +22,7 @@ export interface UpdateJobVacancyData {
 export interface JobVacancyFilters {
   department?: string;
   status?: JobVacancyStatus;
+  q?: string;
 }
 
 const jobVacancyService = {
@@ -57,7 +58,7 @@ const jobVacancyService = {
     filters: JobVacancyFilters = {},
     options: PaginateOptions = {}
   ): Promise<any> {
-    const query:any = {};
+    const query: any = {};
 
     // Apply filters
     if (filters.department) {
@@ -103,6 +104,13 @@ const jobVacancyService = {
 
     if (filters.status) {
       query.status = filters.status;
+    }
+
+    if (filters.q) {
+      query.$or = [
+        { title: { $regex: filters.q, $options: 'i' } },
+        { description: { $regex: filters.q, $options: 'i' } },
+      ];
     }
 
     const page = options.page || 1;

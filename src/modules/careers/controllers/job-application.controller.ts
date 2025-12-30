@@ -32,14 +32,14 @@ const createJobApplication: RequestHandler = asyncHandler(async (req: Request, r
       'You have already applied to this position within the last 15 days. Please try again later.'
     );
   }
-  const alreadyAppliedWithInFifteenDays =
-    await jobApplicationService.hasAlreadyAppliedWithinFifteenDays(validatedData.email);
-  if (alreadyAppliedWithInFifteenDays) {
-    throw new ApiError(
-      status.BAD_REQUEST,
-      'You have already applied to a position within the last 15 days. Please try again later.'
-    );
-  }
+  // const alreadyAppliedWithInFifteenDays =
+  //   await jobApplicationService.hasAlreadyAppliedWithinFifteenDays(validatedData.email);
+  // if (alreadyAppliedWithInFifteenDays) {
+  //   throw new ApiError(
+  //     status.BAD_REQUEST,
+  //     'You have already applied to a position within the last 15 days. Please try again later.'
+  //   );
+  // }
   // Process uploaded resume file
   if (!req.file) {
     throw new ApiError(status.BAD_REQUEST, 'Resume file is required');
