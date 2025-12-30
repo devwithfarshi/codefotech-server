@@ -33,7 +33,12 @@ export const blogValidation = {
         )
         .min(1, 'At least one tag is required')
         .max(10, 'Maximum 10 tags allowed'),
-      isPublished: z.boolean().optional().default(false),
+      isPublished: z
+        .string()
+        .transform((val) => val === 'true')
+        .or(z.boolean())
+        .optional()
+        .default(false),
     }),
   },
 
@@ -71,7 +76,12 @@ export const blogValidation = {
         .min(1, 'At least one tag is required')
         .max(10, 'Maximum 10 tags allowed')
         .optional(),
-      isPublished: z.boolean().optional(),
+      isPublished: z
+        .string()
+        .transform((val) => val === 'true')
+        .or(z.boolean())
+        .optional()
+        .default(false),
     }),
   },
 };

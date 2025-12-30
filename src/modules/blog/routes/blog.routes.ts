@@ -54,7 +54,7 @@ const router: Router = express.Router();
  *                     pagination:
  *                       type: object
  */
-router.get('/', blogController.getPublishedBlogs);
+router.get('/', blogController.getAllBlogs);
 
 /**
  * @swagger
@@ -89,33 +89,64 @@ router.get('/admin', protect, authorize('admin'), blogController.getAllBlogs);
 
 /**
  * @swagger
- * /blogs/search:
+ * /blogs/categories/admin:
  *   get:
- *     summary: Search blogs
- *     description: Search blogs by title, content, excerpt, category, or tags
+ *     summary: Get all distinct categories (Admin)
+ *     description: Get all distinct blog categories including unpublished blogs (Admin only)
  *     tags: [Blogs]
- *     parameters:
- *       - in: query
- *         name: q
- *         required: true
- *         schema:
- *           type: string
- *         description: Search query
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *           default: 1
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *           default: 10
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
  *     responses:
  *       200:
- *         description: Search results
+ *         description: List of all categories
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     categories:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Admin access required
  */
-router.get('/search', blogController.searchBlogs);
+router.get('/categories/admin', protect, blogController.getAllCategoriesAdmin);
+
+/**
+ * @swagger
+ * /blogs/categories:
+ *   get:
+ *     summary: Get all distinct categories
+ *     description: Get all distinct blog categories from published blogs
+ *     tags: [Blogs]
+ *     responses:
+ *       200:
+ *         description: List of all categories
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     categories:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ */
+router.get('/categories', blogController.getAllCategories);
 
 /**
  * @swagger

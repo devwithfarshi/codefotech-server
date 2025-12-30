@@ -6,8 +6,10 @@ import status from 'http-status';
 import { Types } from 'mongoose';
 import blogService from '../services/blog.service';
 import { renameImageToSlug, deleteBlogImage, deleteTempFile } from '../utils/blog.upload';
-
-const blogController = {
+type BlogController = {
+  [key: string]: any;
+};
+const blogController: BlogController = {
   // Create a new blog
   createBlog: asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const blogData = req.body;
@@ -48,20 +50,16 @@ const blogController = {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
 
-    const blogs = await blogService.getAllBlogs({}, { page, limit });
+    const blogs = await blogService.getAllBlogs(
+      {
+        q: req.query?.q as string,
+        isPublished: req.query?.isPublished as string,
+        category: req.query?.category as string,
+      },
+      { page, limit }
+    );
 
     const response = new ApiResponse(status.OK, blogs, 'Blogs retrieved successfully');
-    res.status(response.statusCode).json(response);
-  }),
-
-  // Get published blogs (paginated) - Public
-  getPublishedBlogs: asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
-
-    const blogs = await blogService.getPublishedBlogs({ page, limit });
-
-    const response = new ApiResponse(status.OK, blogs, 'Published blogs retrieved successfully');
     res.status(response.statusCode).json(response);
   }),
 
@@ -263,6 +261,28 @@ const blogController = {
       ? 'Blog published successfully'
       : 'Blog unpublished successfully';
     const response = new ApiResponse(status.OK, { blog }, message);
+    res.status(response.statusCode).json(response);
+  }),
+
+  getAllCategories: asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const categories = await blogService.getAllCategories(false);
+
+    const response = new ApiResponse(
+      status.OK,
+      { categories },
+      'Categories retrieved successfully'
+    );
+    res.status(response.statusCode).json(response);
+  }),
+
+  getAllCategoriesAdmin: asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const categories = await blogService.getAllCategories(true);
+
+    const response = new ApiResponse(
+      status.OK,
+      { categories },
+      'All categories retrieved successfully'
+    );
     res.status(response.statusCode).json(response);
   }),
 };

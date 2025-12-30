@@ -6,6 +6,7 @@ import { CreateBlogType, IBlog, UpdateBlogType } from '../types/blog.types';
 const blogService = {
   // Create a new blog
   async createBlog(blogData: CreateBlogType): Promise<IBlog> {
+    console.log(blogData);
     const blog = new Blog(blogData);
 
     // Set publishedAt if blog is being published
@@ -48,29 +49,32 @@ const blogService = {
   },
 
   // Paginated list of all blogs (with optional query and options)
-  async getAllBlogs(query: object = {}, options: PaginateOptions = {}) {
+  async getAllBlogs(query: any = {}, options: PaginateOptions = {}) {
     const { page = 1, limit = 10, sort = '-createdAt' } = options;
-
+    const searchQuery = {
+      ...(query?.isPublished && {
+        isPublished: query.isPublished === 'true' ? true : false,
+      }),
+      ...(query?.category && {
+        category: query.category,
+      }),
+      ...(query?.q && {
+        $or: [
+          { title: { $regex: query?.q, $options: 'i' } },
+          { excerpt: { $regex: query?.q, $options: 'i' } },
+          { content: { $regex: query?.q, $options: 'i' } },
+          { category: { $regex: query?.q, $options: 'i' } },
+          { tags: { $regex: query?.q, $options: 'i' } },
+        ],
+      }),
+    };
     const paginateOptions = {
       page,
       limit,
       sort,
     };
 
-    return await Blog.paginate(query, paginateOptions);
-  },
-
-  // Get all published blogs (paginated)
-  async getPublishedBlogs(options: PaginateOptions = {}) {
-    const { page = 1, limit = 10, sort = '-publishedAt' } = options;
-
-    const paginateOptions = {
-      page,
-      limit,
-      sort,
-    };
-
-    return await Blog.paginate({ isPublished: true }, paginateOptions);
+    return await Blog.paginate(searchQuery, paginateOptions);
   },
 
   // Get blogs by category (paginated)
@@ -148,6 +152,12 @@ const blogService = {
     }
 
     return await Blog.findByIdAndUpdate(blogId, { $set: updateData }, { new: true });
+  },
+
+  async getAllCategories(includeUnpublished: boolean = false): Promise<string[]> {
+    const query = includeUnpublished ? {} : { isPublished: true };
+    const categories = await Blog.distinct('category', query);
+    return categories.filter((category) => category);
   },
 };
 
